@@ -439,7 +439,6 @@ function addon:CreateWindow()
   where:SetCallback("OnEnter",addon.UpdateWhere)
   where:SetCallback("OnValueChanged",function(widget, event, key) 
      settings.where = key 
-     if key == CHAT_MSG_WHISPER_INFORM or key == BN_WHISPER then
      if key == CHAT_MSG_WHISPER_INFORM or key == BN_WHISPER or key == CHAT_MSG_CHANNEL then
        target:SetDisabled(false)
        target:SetFocus()
@@ -450,7 +449,6 @@ function addon:CreateWindow()
   settings.where = settings.where or CHAT_DEFAULT
   addon.UpdateWhere()
   where:SetValue(settings.where)
-  target:SetDisabled(settings.where ~= CHAT_MSG_WHISPER_INFORM and settings.where ~= BN_WHISPER)
   target:SetDisabled(settings.where ~= CHAT_MSG_WHISPER_INFORM and settings.where ~= BN_WHISPER and settings.where ~= CHAT_MSG_CHANNEL)
   w:AddChild(where)  
   w:AddChild(target)
@@ -508,7 +506,7 @@ addon.wherefn = {
   end,
   [CHAT_MSG_CHANNEL] = function(str) 
      local t = settings.whispertarget
-     if not t then
+     if not t or t == "" then
        chatMsg(L["You must input a channel number!"])
        return
      end
